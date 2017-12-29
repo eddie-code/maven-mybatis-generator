@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_maven-mybatis-generator" default="compile.module.maven-mybatis-generator">
+  <dirname property="module.maven-mybatis-generator.basedir" file="${ant.file.module_maven-mybatis-generator}"/>
+  
+  <property name="module.jdk.home.maven-mybatis-generator" value="${jdk.home.9.0}"/>
+  <property name="module.jdk.bin.maven-mybatis-generator" value="${jdk.bin.9.0}"/>
+  <property name="module.jdk.classpath.maven-mybatis-generator" value="jdk.classpath.9.0"/>
+  
+  <property name="compiler.args.maven-mybatis-generator" value="-encoding UTF-8 -source 1.5 -target 1.5 ${compiler.args}"/>
+  
+  <property name="maven-mybatis-generator.output.dir" value="${module.maven-mybatis-generator.basedir}/target/classes"/>
+  <property name="maven-mybatis-generator.testoutput.dir" value="${module.maven-mybatis-generator.basedir}/target/test-classes"/>
+  
+  <path id="maven-mybatis-generator.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="maven-mybatis-generator.module.production.classpath">
+    <path refid="${module.jdk.classpath.maven-mybatis-generator}"/>
+  </path>
+  
+  <path id="maven-mybatis-generator.runtime.production.module.classpath">
+    <pathelement location="${maven-mybatis-generator.output.dir}"/>
+  </path>
+  
+  <path id="maven-mybatis-generator.module.classpath">
+    <path refid="${module.jdk.classpath.maven-mybatis-generator}"/>
+    <pathelement location="${maven-mybatis-generator.output.dir}"/>
+  </path>
+  
+  <path id="maven-mybatis-generator.runtime.module.classpath">
+    <pathelement location="${maven-mybatis-generator.testoutput.dir}"/>
+    <pathelement location="${maven-mybatis-generator.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.maven-mybatis-generator">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.maven-mybatis-generator">
+    <patternset refid="excluded.from.module.maven-mybatis-generator"/>
+  </patternset>
+  
+  <path id="maven-mybatis-generator.module.sourcepath">
+    <dirset dir="${module.maven-mybatis-generator.basedir}">
+      <include name="src/main/java"/>
+      <include name="src/main/resources"/>
+    </dirset>
+  </path>
+  
+  <path id="maven-mybatis-generator.module.test.sourcepath">
+    <dirset dir="${module.maven-mybatis-generator.basedir}">
+      <include name="src/test/java"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.maven-mybatis-generator" depends="compile.module.maven-mybatis-generator.production,compile.module.maven-mybatis-generator.tests" description="Compile module maven-mybatis-generator"/>
+  
+  <target name="compile.module.maven-mybatis-generator.production" depends="register.custom.compilers" description="Compile module maven-mybatis-generator; production classes">
+    <mkdir dir="${maven-mybatis-generator.output.dir}"/>
+    <javac2 destdir="${maven-mybatis-generator.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.maven-mybatis-generator}/javac">
+      <compilerarg line="${compiler.args.maven-mybatis-generator}"/>
+      <bootclasspath refid="maven-mybatis-generator.module.bootclasspath"/>
+      <classpath refid="maven-mybatis-generator.module.production.classpath"/>
+      <src refid="maven-mybatis-generator.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.maven-mybatis-generator"/>
+    </javac2>
+    
+    <copy todir="${maven-mybatis-generator.output.dir}">
+      <fileset dir="${module.maven-mybatis-generator.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.maven-mybatis-generator.basedir}/src/main/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.maven-mybatis-generator.tests" depends="register.custom.compilers,compile.module.maven-mybatis-generator.production" description="compile module maven-mybatis-generator; test classes" unless="skip.tests">
+    <mkdir dir="${maven-mybatis-generator.testoutput.dir}"/>
+    <javac2 destdir="${maven-mybatis-generator.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.maven-mybatis-generator}/javac">
+      <compilerarg line="${compiler.args.maven-mybatis-generator}"/>
+      <bootclasspath refid="maven-mybatis-generator.module.bootclasspath"/>
+      <classpath refid="maven-mybatis-generator.module.classpath"/>
+      <src refid="maven-mybatis-generator.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.maven-mybatis-generator"/>
+    </javac2>
+    
+    <copy todir="${maven-mybatis-generator.testoutput.dir}">
+      <fileset dir="${module.maven-mybatis-generator.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.maven-mybatis-generator" description="cleanup module">
+    <delete dir="${maven-mybatis-generator.output.dir}"/>
+    <delete dir="${maven-mybatis-generator.testoutput.dir}"/>
+  </target>
+</project>
